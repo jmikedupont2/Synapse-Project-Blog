@@ -2,10 +2,10 @@ export interface BlogPost {
   id: string
   title: string
   content: string
-  publishDate: string
-  lastModified: string
+  publishDate: number | null
+  lastModified: number | null
   excerpt: string
-  coverImage?: string
-  readingTime?: string
   slug: string
+  coverImage: string | null
+  readingTime: string | null
 } 

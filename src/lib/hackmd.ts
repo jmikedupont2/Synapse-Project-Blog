@@ -1,89 +1,83 @@
-const HACKMD_API_URL = 'https://api.hackmd.io/v1';
+import { BlogPost } from '@/types/blog'
 
-export interface BlogPost {
-  id: string
-  title: string
-  content: string
-  publishDate: string
-  lastModified: string
-  excerpt: string
-  coverImage?: string
-  readingTime?: string
-  slug: string
-}
-
-import { getFromCache, saveToCache, getPostFromCache, savePostToCache } from './cache'
+const API_BASE_URL = process.env.API_URL || 'http://localhost:4050'
+const API_KEY = process.env.ADMIN_API_KEY
 
 export async function fetchBlogPosts(): Promise<BlogPost[]> {
-  // Try to get from cache first
-  const cachedPosts = getFromCache()
-  if (cachedPosts) {
-    return cachedPosts
-  }
+    try {
+        const headers = new Headers({
+            "Content-Type": "application/json",
+            "x-api-key": process.env.ADMIN_API_KEY || ''
+        });
 
-  // If not in cache, fetch from API
-  const response = await fetch(`${HACKMD_API_URL}/notes`, {
-    headers: {
-      'Authorization': `Bearer ${process.env.HACKMD_API_KEY}`,
-    },
-  });
+        console.log('Making request to:', `${API_BASE_URL}/notes`)
+        console.log('With headers:', Object.fromEntries(headers.entries()))
 
-  if (!response.ok) {
-    throw new Error('Failed to fetch blog posts');
-  }
+        const response = await fetch(`${API_BASE_URL}/notes`, {
+            method: 'GET',
+            headers: headers,
+            credentials: 'include',
+        });
+        
+        // Debug logging
+        console.log('Response status:', response.status)
+        console.log('Response headers:', Object.fromEntries(response.headers))
+        
+        if (!response.ok) {
+            const errorText = await response.text()
+            console.error('Error response:', errorText)
+            throw new Error(`Failed to fetch posts: ${response.status} ${response.statusText}`)
+        }
 
-  const posts = await response.json();
-  
-  // Transform HackMD response to our BlogPost type
-  return posts.map((post: any) => ({
-    id: post.id,
-    title: post.title,
-    content: post.content,
-    publishDate: post.publishedAt,
-    lastModified: post.lastChangedAt,
-    excerpt: post.excerpt || post.content.substring(0, 150) + '...',
-    slug: post.permalink,
-    // Add other transformations as needed
-  }));
+        const text = await response.text()
+        console.log('Raw response text:', text)
+
+        try {
+            const data = JSON.parse(text)
+            console.log('Parsed data:', data)
+            return data as BlogPost[]
+        } catch (e) {
+            console.error('JSON parse error:', e)
+            throw new Error('Invalid JSON response')
+        }
+    } catch (error) {
+        console.error('Full error details:', error)
+        throw error
+    }
 }
 
 export async function fetchBlogPost(slug: string): Promise<BlogPost> {
-  // Try to get from cache first
-  const cachedPost = getPostFromCache(slug)
-  if (cachedPost) {
-    return cachedPost
-  }
+    const headers = new Headers({
+        "Content-Type": "application/json",
+        "x-api-key": process.env.ADMIN_API_KEY || ''
+    });
 
-  const response = await fetch(`${HACKMD_API_URL}/notes/${slug}`, {
-    headers: {
-      'Authorization': `Bearer ${process.env.HACKMD_API_KEY}`,
-    },
-  });
+    const response = await fetch(`${API_BASE_URL}/notes/${slug}`, {
+        method: 'GET',
+        headers: headers,
+        credentials: 'include',
+    });
 
-  if (!response.ok) {
-    throw new Error('Failed to fetch blog post');
-  }
-
-  const post = await response.json();
-  
-  const transformedPost = {
-    id: post.id,
-    title: post.title,
-    content: post.content,
-    publishDate: post.publishedAt,
-    lastModified: post.lastChangedAt,
-    excerpt: post.excerpt || post.content.substring(0, 150) + '...',
-    slug: post.permalink,
-  };
-
-  // Save to cache
-  savePostToCache(transformedPost);
-
-  return transformedPost;
+    if (!response.ok) {
+        throw new Error('Failed to fetch post')
+    }
+    return response.json()
 }
 
-export async function refreshBlogPosts(): Promise<BlogPost[]> {
-  const posts = await fetchBlogPosts();
-  saveToCache(posts);
-  return posts;
-} 
+export async function refreshBlogPosts(slug: string): Promise<BlogPost> {
+    const headers = new Headers({
+        "Content-Type": "application/json",
+        "x-api-key": process.env.ADMIN_API_KEY || ''
+    });
+
+    const response = await fetch(`${API_BASE_URL}/notes/${slug}`, {
+        method: 'GET',
+        headers: headers,
+        credentials: 'include',
+    });
+
+    if (!response.ok) {
+        throw new Error('Failed to fetch post')
+    }
+    return response.json()
+}

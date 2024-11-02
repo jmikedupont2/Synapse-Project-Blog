@@ -1,6 +1,6 @@
-import fs from 'fs'
+import * as fs from 'fs'
 import path from 'path'
-import { BlogPost } from '@/types/blog'
+import { BlogPost } from '../types/blog'
 
 const CACHE_DIR = path.join(process.cwd(), '.cache')
 const POSTS_CACHE_FILE = path.join(CACHE_DIR, 'blog-posts.json')

@@ -1,4 +1,4 @@
-import { V0LandingPageComponent } from "@/components/v0-landing-page";
+import { V0LandingPageComponent } from "../components/v0-landing-page";
 import Link from "next/link";
 
 export default function Home() {
