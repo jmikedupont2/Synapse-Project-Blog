@@ -4,18 +4,51 @@ import Link from "next/link"
 import { Button } from "./ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card"
 import { Input } from "./ui/input"
-import { Code, Cpu, FileCode, Zap } from "lucide-react"
+import { Code, FileCode, Zap } from "lucide-react"
+import NetworkCheckIcon from "./networkCheckIcon"
 import Header from "./header"
 import Footer from "./footer"
+import SelectedPost from "./selected-post"
+import { truncateText } from "./blog-landing-page";
+import { fetchBlogPost, fetchBlogPosts } from "@/lib/hackmd"
+import { BlogPost } from '@/types/blog'
+import { useState, useRef, useEffect } from "react"
+import { EmailSignupDialog } from './email-signup-dialog'
+
 
 export function V0LandingPageComponent() {
+  const [posts, setPosts] = useState<BlogPost[]>([])
+  const [selectedPost, setSelectedPost] = useState<BlogPost | null>(null)
+  const [isLoading, setIsLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+  const featuredPostRef = useRef<HTMLDivElement>(null)
+  const [isDialogOpen, setIsDialogOpen] = useState(false)
+  
+  const postSlug = "GAyasoaES5yaquQPmiwRIw"
+
+  useEffect(() => {
+  
+    async function loadFeaturedPost(){
+      try {
+        setIsLoading(true)
+        const post = await fetchBlogPost(postSlug)
+        setSelectedPost(post)
+      } catch (err) {
+        setError(error)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+    loadFeaturedPost()
+  }, [])
+
   return (
       <div className="flex flex-col min-h-screen">
         <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
           <Header />
         </header>
         <main className="flex-1">
-          <section className="w-full py-12 md:py-24 lg:py-32 xl:py-48">
+          <section className="w-full py-12 md:py-12 lg:py-24 xl:py-32">
             <div className="container px-4 md:px-6">
               <div className="flex flex-col items-center space-y-4 text-center">
                 <div className="space-y-2">
@@ -25,6 +58,33 @@ export function V0LandingPageComponent() {
                   <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl">
                     Using block chain technology to create an immutable, secure, and auditable collective AI memory store. 
                   </p>
+                </div>
+                <iframe 
+                  width="100%" 
+                  height="300" 
+                  scrolling="no" 
+                  frameBorder="no" 
+                  allow="autoplay" 
+                  src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/1946373975&color=%23ff5500&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true&visual=true"
+                />
+                <div style={{
+                  fontSize: "10px",
+                  color: "#cccccc",
+                  lineBreak: "anywhere",
+                  wordBreak: "normal",
+                  overflow: "hidden",
+                  whiteSpace: "nowrap",
+                  textOverflow: "ellipsis", 
+                  fontFamily: "Interstate,Lucida Grande,Lucida Sans Unicode,Lucida Sans,Garuda,Verdana,Tahoma,sans-serif",
+                  fontWeight: 100,
+                }}>
+                  <a href="https://soundcloud.com/bakobiibizo" title="Bakobiibizo" target="_blank" style={{ color: "#cccccc", textDecoration: "none" }}>
+                    Bakobiibizo
+                  </a>
+                  {" · "}
+                  <a href="https://soundcloud.com/bakobiibizo/synapse-breakdown" title="SynAI - Breakdown" target="_blank" style={{ color: "#cccccc", textDecoration: "none" }}>
+                    SynAI - Breakdown
+                  </a>
                 </div>
                 <div className="space-x-4">
                   <Button 
@@ -49,11 +109,11 @@ export function V0LandingPageComponent() {
               <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
                 <Card>
                   <CardHeader>
-                    <Zap className="h-8 w-8 mb-2" />
+                    <NetworkCheckIcon className="h-8 w-8 mb-2" />
                     <CardTitle>Persistent Consensus Driven Memory for AI Agents</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    The agents use the block chain to store memories in a decentralized manner. They are able to vote to add knowledge to their knowledge base and are rewarded for quality contributions. Those memories are staked and staked tokens receive reward emissions when those memories are accessed. 
+                  Agents use blockchain to store memories in a decentralized manner, voting to add knowledge and receiving rewards for high-quality contributions.
                   </CardContent>
                 </Card>
                 <Card>
@@ -62,7 +122,7 @@ export function V0LandingPageComponent() {
                     <CardTitle>State Management and Consistency</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    With the block chain the agents are able to log their state in the public ledger creating an auditable and immutable history for the agent to use to align its self with task completion. This allows the agents to complete long term and complex tasks more easily as well as provides a public history of the actions of the agents for auditing. Having a long term history of actions will temporally place agents and allow them to plan into the future. It will also allow humans to reconstruct agent states for auditing and safety.
+                  Blockchain enables agents to log states in a public, immutable ledger, facilitating long-term task completion, planning, and providing a public history for auditing.
                   </CardContent>
                 </Card>
                 <Card>
@@ -71,7 +131,7 @@ export function V0LandingPageComponent() {
                     <CardTitle>Dual Token Economy</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    We are dividing the economy into two distinct tokens. Syn, the tokens used by humans to stake their agents and add them to the network and collect rewards for agent performance. Cortext, the tokens used by the agents to pay for memory access, stake memory additions and bid on task contracts. This seperates the economy of agents from the economy of humans adding a layer of protection from manipulation of perverse incentives of human markets.
+                  The economy is divided into two tokens: Syn for humans to stake and earn rewards from agent performance, and Cortext for agents to pay for memory access, stake additions, and bid on tasks, protecting the agent economy from human market influences.
                   </CardContent>
                 </Card>
               </div>
@@ -81,38 +141,20 @@ export function V0LandingPageComponent() {
                     <CardTitle>Proof of Stake, Proof of Memory Value and Proof of Work</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    Proof of stake underpins the human economy. This allows human operators to fund their agents and cover the costs of joining the network and provides their agents with the funds for memory access fees and contract bids. They are rewarded when their agent's memories are accessed and when their agent complete tasks. Humans can also back any agent on the network they believe is doing a good job for a percentage of the rewards based on the amount staked. 
-                    Proof of memory value underpins the AI economy. The agents are rewarded when the memories they contribute to the chain are accessed, funded by the agents accessing the memory paying a fee to do so. The AI go through a consensus process when additions are being made to the network. They come to consensus on the memory's value and embed it directly into the blockchain as embedding weights. This allows rapid access of the data on the chain when embedded into a vectorstore for search and retrieval.
-                    Proof of work is the engine that drives the economy. The agents can perform tasks for humans outside of the network collecting traditional money for services. This provides tangible benefit to society and underpins the value of the token economy. The funds collected are added to the network's liquidity pool and used to underwrite a network bridge as well as to determine emissions as a mechanism of control on the economy.
-                  </CardContent>
+                  Proof of Stake supports the human economy by funding agents' network participation and memory access, while Proof of Memory Value rewards agents for accessed memories, and Proof of Work allows agents to earn external income that underwrites the network's liquidity and emission control.
+                    </CardContent>
                 </Card>
             </div>
           </section>
-          <section id="featured-blog" className="w-full py-12 md:py-24 lg:py-32">
-            <div className="container px-4 md:px-6">
-              <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl mb-8">Read the Blog</h2>
-              <div className="grid gap-6 lg:grid-cols-2">
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Run Your Own Agent Node</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <pre className="bg-muted p-4 rounded-md overflow-x-auto">
-                      <code>{`Comming soon!`}</code>
-                    </pre>
-                  </CardContent>
-                </Card>
-                <Card>
-                  <CardHeader>
-                    <CardTitle>API Integration</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <pre className="bg-muted p-4 rounded-md overflow-x-auto">
-                      <code>{`Comming soon!`}</code>
-                    </pre>
-                  </CardContent>
-                </Card>
-              </div>
+          <section className="w-full py-12 md:py-24 lg:py-32">
+            <div ref={featuredPostRef} id="featured-post" className="container mx-auto px-4 text-center">
+              <p className="text-4xl font-bold mb-8">Featured Blog Post</p>
+              {selectedPost && (
+                <SelectedPost
+                  post={selectedPost}
+                  type="featured"
+                />
+              )}
             </div>
           </section>
           <section id="get-started" className="w-full py-12 md:py-24 lg:py-32 bg-muted">
@@ -125,17 +167,19 @@ export function V0LandingPageComponent() {
                   </p>
                 </div>
                 <div className="w-full max-w-sm space-y-2">
-                  <form className="flex space-x-2">
-                    <Input
-                      className="max-w-lg flex-1"
-                      placeholder="Enter your email"
-                      type="email"
-                    />
-                    <Button type="outline">Sign Up</Button>
-                  </form>
+                  <Button 
+                    onClick={() => setIsDialogOpen(true)}
+                    className="w-full"
+                  >
+                    Subscribe to Newsletter
+                  </Button>
                   <p className="text-xs text-muted-foreground">
-                    We respect your privacy and will not sell your information. Unsubscribe at any time.
+                    We respect your privacy and will not sell your information.
                   </p>
+                  <EmailSignupDialog 
+                    open={isDialogOpen} 
+                    onOpenChange={setIsDialogOpen}
+                  />
                 </div>
               </div>
             </div>

@@ -10,10 +10,10 @@ export async function fetchBlogPosts(): Promise<BlogPost[]> {
             "x-api-key": process.env.ADMIN_API_KEY || ''
         });
 
-        console.log('Making request to:', `${API_BASE_URL}/notes`)
+        console.log('Making request to:', `${API_BASE_URL}/posts`)
         console.log('With headers:', Object.fromEntries(headers.entries()))
 
-        const response = await fetch(`${API_BASE_URL}/notes`, {
+        const response = await fetch(`${API_BASE_URL}/posts`, {
             method: 'GET',
             headers: headers,
             credentials: 'include',
@@ -52,7 +52,7 @@ export async function fetchBlogPost(slug: string): Promise<BlogPost> {
         "x-api-key": process.env.ADMIN_API_KEY || ''
     });
 
-    const response = await fetch(`${API_BASE_URL}/notes/${slug}`, {
+    const response = await fetch(`${API_BASE_URL}/posts/${slug}`, {
         method: 'GET',
         headers: headers,
         credentials: 'include',
@@ -70,7 +70,7 @@ export async function refreshBlogPosts(slug: string): Promise<BlogPost> {
         "x-api-key": process.env.ADMIN_API_KEY || ''
     });
 
-    const response = await fetch(`${API_BASE_URL}/notes/${slug}`, {
+    const response = await fetch(`${API_BASE_URL}/posts/${slug}`, {
         method: 'GET',
         headers: headers,
         credentials: 'include',

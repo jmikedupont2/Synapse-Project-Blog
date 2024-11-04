@@ -9,13 +9,13 @@ export default function Header() {
                 <Link href="/" className="flex items-center space-x-2">
                     <Image
                         src="/icon.png"
-                        alt="SynAI Logo"
+                        alt="Syn-AI Logo"
                         width={32}
                         height={32}
                         className="h-8 w-8"
                         priority
                     />
-                    <span className="font-bold text-xl">SynAI Blog</span>
+                    <span className="font-bold text-xl">Syn-AI</span>
                 </Link>
                 <nav className="ml-auto flex items-center space-x-4 sm:space-x-6">
                     <Link href="/#features" className="text-sm font-medium hover:underline underline-offset-4">
