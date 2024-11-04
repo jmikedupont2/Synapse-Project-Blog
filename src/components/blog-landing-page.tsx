@@ -57,15 +57,15 @@ export default function BlogLandingPage() {
   }
 
   return (
-    <div className="max-w-4xl mx-auto px-4">
-      <div className="flex flex-col min-h-screen">
+    <div className="max-w-4xl mx-auto">
         <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
           <Header />
         </header>
         <main className="flex-1">
         
           {/* Newsletter Section */}
-          <section id="get-started" className="w-full py-12 md:py-24 lg:py-32 bg-muted">
+
+          <section id="get-started" className="w-full py-6 md:py-12 lg:py-18 bg-muted">
             <div className="container px-4 md:px-6">
               <div className="flex flex-col items-center justify-center space-y-4 text-center">
                 <div className="space-y-2">
@@ -94,10 +94,9 @@ export default function BlogLandingPage() {
           </section>
 
           {/* Latest Post Section */} 
-          <div  className="container mx-auto px-4 text-center text-4xl md:text-5xl lg:text-6xl font-extrabold">
-            <p className="text-4xl font-bold mb-8">Latest Post</p>
-          </div> 
+          <section className="w-full py-12 md:py-24 lg:py-32">
           <div ref={latestPostRef} id="latest-post" className="container mx-auto px-4">
+          <p className="text-4xl font-bold mb-8">Latest Blog Post</p>
             {selectedPost && (
               <SelectedPost
                 post={selectedPost}
@@ -106,6 +105,7 @@ export default function BlogLandingPage() {
               />
             )}
           </div>
+          </section>
 
           {/* Other Posts Grid */}
           <section className="w-full py-12 bg-background">
@@ -162,6 +162,5 @@ export default function BlogLandingPage() {
           <Footer />
         </footer>
       </div>
-    </div>
   )
 }
