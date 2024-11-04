@@ -1,13 +1,13 @@
 import { BlogPost } from '@/types/blog'
 
-const API_BASE_URL = process.env.API_URL || 'http://localhost:4050'
+const API_BASE_URL = process.env.API_URL || 'https://blogbackend-synai.ngrok.dev/api/v1'
 const API_KEY = process.env.ADMIN_API_KEY
 
 export async function fetchBlogPosts(): Promise<BlogPost[]> {
     try {
         const headers = new Headers({
             "Content-Type": "application/json",
-            "x-api-key": process.env.ADMIN_API_KEY || ''
+            "x-api-key": process.env.ADMIN_API_KEY || 'sk-1234'
         });
 
         console.log('Making request to:', `${API_BASE_URL}/posts`)
@@ -16,7 +16,7 @@ export async function fetchBlogPosts(): Promise<BlogPost[]> {
         const response = await fetch(`${API_BASE_URL}/posts`, {
             method: 'GET',
             headers: headers,
-            credentials: 'include',
+            credentials: 'include'
         });
         
         // Debug logging
@@ -55,7 +55,7 @@ export async function fetchBlogPost(slug: string): Promise<BlogPost> {
     const response = await fetch(`${API_BASE_URL}/posts/${slug}`, {
         method: 'GET',
         headers: headers,
-        credentials: 'include',
+        credentials: 'include'
     });
 
     if (!response.ok) {
@@ -73,7 +73,7 @@ export async function refreshBlogPosts(slug: string): Promise<BlogPost> {
     const response = await fetch(`${API_BASE_URL}/posts/${slug}`, {
         method: 'GET',
         headers: headers,
-        credentials: 'include',
+        credentials: 'include'
     });
 
     if (!response.ok) {

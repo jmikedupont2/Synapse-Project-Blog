@@ -36,7 +36,7 @@ export default function SelectedPost({ post, onPostSelect, type = 'featured' }: 
             ref={latestPostRef} 
             className="w-full py-12 md:py-24 bg-muted"
         >
-            <div className="container mx-auto px-4">
+            <div className="container mx-auto px-8">
                 <h1 className="text-4xl font-bold mb-8">{post.title}</h1>
                 {post.coverImage && (
                     <Image

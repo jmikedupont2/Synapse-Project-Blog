@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { db } from '@/lib/db' // You'll need to set up your database connection
+import { createSubscription } from '@/lib/subscription'
 
 export async function POST(request: Request) {
   try {
@@ -13,22 +13,31 @@ export async function POST(request: Request) {
       )
     }
 
-    // Store in database
-    await db.subscriber.create({
-      data: {
-        email,
-        name,
-      },
-    })
+    // Use the subscription service instead of direct DB access
+    const subscription = await createSubscription(email, name)
 
     return NextResponse.json(
-      { message: 'Subscription successful' },
+      { 
+        message: 'Subscription successful',
+        data: subscription 
+      },
       { status: 200 }
     )
   } catch (error) {
     console.error('Subscription error:', error)
+    
+    // Handle specific error cases
+    if (error instanceof Error) {
+      if (error.message.includes('duplicate')) {
+        return NextResponse.json(
+          { error: 'Email already subscribed' },
+          { status: 409 }
+        )
+      }
+    }
+
     return NextResponse.json(
-      { error: 'Internal server error' },
+      { error: 'Failed to create subscription' },
       { status: 500 }
     )
   }

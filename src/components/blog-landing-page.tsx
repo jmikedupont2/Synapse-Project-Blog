@@ -1,7 +1,6 @@
 'use client'
 
 import { useEffect, useState, useRef } from 'react'
-import Link from "next/link"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
@@ -11,8 +10,8 @@ import { BlogPost } from '@/types/blog'
 import Markdown from 'react-markdown'
 import Header from "./header"
 import Footer from "./footer"
-import { Input } from './ui/input'
 import SelectedPost from "@/components/selected-post"
+import { EmailSignupDialog } from './email-signup-dialog'
 
 function formatDate(timestamp?: number | null): string {
   if (!timestamp) return 'Date unavailable'
@@ -30,6 +29,7 @@ export default function BlogLandingPage() {
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const latestPostRef = useRef<HTMLDivElement>(null)
+  const [isDialogOpen, setIsDialogOpen] = useState(false)
   useEffect(() => {
     async function loadPosts() {
       try {
@@ -39,7 +39,7 @@ export default function BlogLandingPage() {
           throw new Error('Invalid response format')
         }
         setPosts(data)
-        setSelectedPost(data[2])
+        setSelectedPost(data[0])
       } catch (err) {
         console.error('Error loading posts:', err)
         setError(err instanceof Error ? err.message : 'Failed to load blog posts')
@@ -65,27 +65,29 @@ export default function BlogLandingPage() {
         <main className="flex-1">
         
           {/* Newsletter Section */}
-          <section className="w-full py-6 md:py-12 lg:py-24">
+          <section id="get-started" className="w-full py-12 md:py-24 lg:py-32 bg-muted">
             <div className="container px-4 md:px-6">
               <div className="flex flex-col items-center justify-center space-y-4 text-center">
                 <div className="space-y-2">
-                  <h2 className="text-lg font-bold tracking-tighter sm:text-xl">Stay Updated</h2>
-                  <p className="max-w-[600px] text-muted-foreground md:text-2xl/relaxed lg:text-base/relaxed 2xl:text-lg/relaxed">
-                    Subscribe to our newsletter to receive the latest blog posts and updates.
+                  <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl">Stay Informed</h2>
+                  <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
+                    Join the news letter to keep up to date on the project. 
                   </p>
                 </div>
                 <div className="w-full max-w-sm space-y-2">
-                  <form className="flex space-x-2">
-                    <Input
-                      className="max-w-lg flex-1"
-                      placeholder="Enter your email"
-                      type="email"
-                    />
-                    <Button type="submit">Subscribe</Button>
-                  </form>
+                  <Button 
+                    onClick={() => setIsDialogOpen(true)}
+                    className="w-full"
+                  >
+                    Subscribe to Newsletter
+                  </Button>
                   <p className="text-xs text-muted-foreground">
-                    We respect your privacy. Unsubscribe at any time.
+                    We respect your privacy and will not sell your information.
                   </p>
+                  <EmailSignupDialog 
+                    open={isDialogOpen} 
+                    onOpenChange={setIsDialogOpen}
+                  />
                 </div>
               </div>
             </div>

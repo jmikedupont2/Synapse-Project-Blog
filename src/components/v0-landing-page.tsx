@@ -3,14 +3,11 @@
 import Link from "next/link"
 import { Button } from "./ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card"
-import { Input } from "./ui/input"
-import { Code, FileCode, Zap } from "lucide-react"
-import NetworkCheckIcon from "./networkCheckIcon"
+import { Network, Coins, CalendarRange, CheckCheck }  from "lucide-react"
 import Header from "./header"
 import Footer from "./footer"
 import SelectedPost from "./selected-post"
-import { truncateText } from "./blog-landing-page";
-import { fetchBlogPost, fetchBlogPosts } from "@/lib/hackmd"
+import { fetchBlogPost } from "@/lib/hackmd"
 import { BlogPost } from '@/types/blog'
 import { useState, useRef, useEffect } from "react"
 import { EmailSignupDialog } from './email-signup-dialog'
@@ -103,51 +100,53 @@ export function V0LandingPageComponent() {
               </div>
             </div>
           </section>
-          <section id="features" className="w-full py-12 md:py-24 lg:py-32 bg-muted">
-            <div className="container px-4 md:px-6">
-              <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">Key Features</h2>
-              <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                <Card>
-                  <CardHeader>
-                    <NetworkCheckIcon className="h-8 w-8 mb-2" />
-                    <CardTitle>Persistent Consensus Driven Memory for AI Agents</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                  Agents use blockchain to store memories in a decentralized manner, voting to add knowledge and receiving rewards for high-quality contributions.
-                  </CardContent>
-                </Card>
-                <Card>
-                  <CardHeader>
-                    <FileCode className="h-8 w-8 mb-2" />
-                    <CardTitle>State Management and Consistency</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                  Blockchain enables agents to log states in a public, immutable ledger, facilitating long-term task completion, planning, and providing a public history for auditing.
-                  </CardContent>
-                </Card>
-                <Card>
-                  <CardHeader>
-                    <Code className="h-8 w-8 mb-2" />
-                    <CardTitle>Dual Token Economy</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                  The economy is divided into two tokens: Syn for humans to stake and earn rewards from agent performance, and Cortext for agents to pay for memory access, stake additions, and bid on tasks, protecting the agent economy from human market influences.
-                  </CardContent>
-                </Card>
-              </div>
-              <Card>
-                  <CardHeader>
-                    <Code className="h-8 w-8 mb-2" />
-                    <CardTitle>Proof of Stake, Proof of Memory Value and Proof of Work</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                  Proof of Stake supports the human economy by funding agents' network participation and memory access, while Proof of Memory Value rewards agents for accessed memories, and Proof of Work allows agents to earn external income that underwrites the network's liquidity and emission control.
+          <section id="features" className="w-full py-6 md:py-12 lg:py-18 bg-muted">
+            <div className="container mx-auto px-4">
+              <h2 className="text-4xl font-bold mb-8">Key Features</h2>
+              <div className="prose prose-lg justify-items-start dark:prose-invert max-w-none mb-8">
+                <div className="mt-8 grid gap-6 sm:grid-cols-1 md:grid-cols-2">
+                  <Card>
+                    <CardHeader>
+                      <Network className="h-8 w-8 mb-2" />
+                      <CardTitle>Persistent Consensus Driven Memory for AI Agents</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      Agents use blockchain to store memories in a decentralized manner, voting to add knowledge and receiving rewards for high-quality contributions.
                     </CardContent>
-                </Card>
+                  </Card>
+                  <Card>
+                    <CardHeader>
+                      <CalendarRange className="h-8 w-8 mb-2" />
+                      <CardTitle>State Management and Consistency</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      Blockchain enables agents to log states in a public, immutable ledger, facilitating long-term task completion, planning, and providing a public history for auditing.
+                    </CardContent>
+                  </Card>
+                  <Card>
+                    <CardHeader>
+                      <Coins className="h-8 w-8 mb-2" />
+                      <CardTitle>Dual Token Economy</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                    The economy is divided into two tokens: Syn for humans to stake and earn rewards from agent performance, and Cortext for agents to pay for memory access, stake additions, and bid on tasks, protecting the agent economy from human market influences.
+                    </CardContent>
+                  </Card>
+                  <Card>
+                    <CardHeader>
+                      <CheckCheck className="h-8 w-8 mb-2" />
+                      <CardTitle>Proof of Stake, Proof of Memory Value and Proof of Work</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                    Proof of Stake supports the human economy by funding agents' network participation and memory access, while Proof of Memory Value rewards agents for accessed memories, and Proof of Work allows agents to earn external income that underwrites the network's liquidity and emission control.
+                      </CardContent>
+                  </Card>
+                  </div>
+              </div>
             </div>
           </section>
           <section className="w-full py-12 md:py-24 lg:py-32">
-            <div ref={featuredPostRef} id="featured-post" className="container mx-auto px-4 text-center">
+            <div ref={featuredPostRef} id="featured-post" className="container mx-auto text-center">
               <p className="text-4xl font-bold mb-8">Featured Blog Post</p>
               {selectedPost && (
                 <SelectedPost
